@@ -426,64 +426,35 @@
             background-color: var(--primary-dark);
             color: white;
             text-align: center;
-            padding: 1.5rem 0;
+            padding: 1rem 0;
             margin-top: auto;
         }
         
         .footer-content {
             display: flex;
             flex-direction: column;
-            gap: 0.75rem;
+            gap: 0.5rem;
         }
         
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 1.25rem;
-            margin-bottom: 0.75rem;
-            flex-wrap: wrap;
-        }
-        
-        .footer-links a {
-            color: var(--gray-300);
-            text-decoration: none;
-            transition: color 0.3s ease;
-            font-size: 0.85rem;
-        }
-        
-        .footer-links a:hover {
-            color: var(--accent);
-        }
-        
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-bottom: 0.75rem;
-        }
-        
-        .social-links a {
-            color: white;
-            background-color: rgba(255, 255, 255, 0.1);
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            transition: var(--transition);
-        }
-        
-        .social-links a:hover {
-            background-color: var(--accent);
-            color: var(--primary-dark);
-            transform: translateY(-3px);
-        }
-        
-        .copyright {
+        .footer-legal {
             color: var(--gray-400);
             font-size: 0.8rem;
+        }
+        
+        .footer-legal a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        
+        .footer-legal a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Hide footer on small screens */
+        @media (max-width: 767px) {
+            footer {
+                display: none;
+            }
         }
         
         /* Animations and accessibility */
@@ -539,6 +510,11 @@
                 margin-bottom: 1rem;
             }
             
+            /* Hide hero title and text on mobile */
+            .hero h1, .hero p, .cookie-notice {
+                display: none;
+            }
+            
             /* More compact mobile search form */
             .card {
                 padding: 1.25rem;
@@ -547,11 +523,6 @@
             
             .flight-card {
                 padding: 1rem;
-            }
-            
-            /* Auto hide tagline on small screens */
-            .hero p {
-                display: none;
             }
         }
         
@@ -655,10 +626,10 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="timeRange"><i class="far fa-clock"></i> Within <span id="timeRangeValue">2</span> Hours</label>
-                    <input type="range" id="timeRange" name="timeRange" min="0.5" max="4" step="0.5" value="2">
+                    <label for="timeRange"><i class="far fa-clock"></i> <span id="timeRangeLabel">Give me 30 mins</span></label>
+                    <input type="range" id="timeRange" name="timeRange" min="0" max="4" step="0.5" value="0.5">
                     <div class="range-marks">
-                        <span>30min</span>
+                        <span>Now</span>
                         <span>4hrs</span>
                     </div>
                 </div>
@@ -678,19 +649,8 @@
     <footer>
         <div class="container">
             <div class="footer-content">
-                <div class="footer-links">
-                    <a href="#">About</a>
-                    <a href="#">Help</a>
-                    <a href="#">Terms</a>
-                    <a href="#">Privacy</a>
-                </div>
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                </div>
-                <div class="copyright">
-                    <p>&copy; 2025 NextFlightTo.com | All Rights Reserved</p>
+                <div class="footer-legal">
+                    <p>&copy; 2025 NextFlightTo.com | We don't use cookies | <a href="/privacy.html">Privacy Policy</a></p>
                 </div>
             </div>
         </div>
