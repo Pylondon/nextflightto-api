@@ -3,203 +3,504 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Find the next available flights between any two airports within your specified time window.">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="icon-192.png">
     <title>NextFlightTo - Find Your Next Flight</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#075AAA">
     <style>
         :root {
-            --primary-color: #3498db;
-            --secondary-color: #2980b9;
-            --accent-color: #f39c12;
-            --light-color: #ecf0f1;
-            --dark-color: #2c3e50;
+            --primary: #075AAA; /* Navy Blue */
+            --primary-dark: #05478a;
+            --secondary: #D71F26; /* Red */
+            --accent: #FFAD00; /* Gold */
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-400: #ced4da;
+            --gray-500: #adb5bd;
+            --gray-600: #6c757d;
+            --gray-700: #495057;
+            --gray-800: #343a40;
+            --gray-900: #212529;
+            --shadow: 0 4px 12px rgba(7, 90, 170, 0.15);
+            --radius: 8px;
+            --transition: all 0.3s ease;
         }
         
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', sans-serif;
         }
         
         body {
-            background-color: var(--light-color);
-            color: var(--dark-color);
+            color: var(--gray-800);
             line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--gray-100);
         }
         
+        .container {
+            width: 92%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+        
+        /* Header */
         header {
             background-color: white;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow);
             padding: 1rem;
             position: sticky;
             top: 0;
             z-index: 100;
         }
         
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem 0;
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .logo-icon {
+            font-size: 1.6rem;
+            color: var(--secondary);
         }
         
         .logo {
+            font-family: 'Montserrat', sans-serif;
             font-size: 1.8rem;
             font-weight: 700;
-            color: var(--primary-color);
+            color: var(--primary);
+            letter-spacing: -0.5px;
         }
         
         .logo span {
-            color: var(--accent-color);
+            color: var(--secondary);
+        }
+        
+        /* Hero section */
+        .hero {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            padding-top: 1rem;
+        }
+        
+        .hero h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--gray-900);
+        }
+        
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--gray-600);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Card styling for search and results */
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            padding: 2.5rem;
+            border: 1px solid rgba(0, 0, 0, 0.03);
         }
         
         .flight-search {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            padding: 2rem;
-            margin-top: 2rem;
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            margin-top: 1rem;
+            position: relative;
+            overflow: hidden;
         }
         
+        .flight-search::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+        }
+        
+        /* Form elements */
         .search-form {
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            gap: 1.8rem;
         }
         
         .form-group {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.6rem;
         }
         
         label {
-            font-weight: 600;
-            font-size: 1rem;
+            font-weight: 500;
+            font-size: 0.95rem;
+            color: var(--gray-700);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
         }
         
-        input, select {
-            padding: 0.8rem 1rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+        label i {
+            color: var(--primary);
+        }
+        
+        input {
+            padding: 0.9rem 1.2rem;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius);
             font-size: 1rem;
             outline: none;
-            transition: all 0.3s ease;
+            transition: var(--transition);
+            background-color: white;
         }
         
-        input:focus, select:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(7, 90, 170, 0.15);
         }
         
+        /* Range slider styling */
         input[type="range"] {
             -webkit-appearance: none;
-            width: 100%;
             height: 8px;
-            border-radius: 5px;  
-            background: #ddd;
-            outline: none;
+            border-radius: 4px;  
+            background: linear-gradient(to right, var(--primary-dark), var(--primary));
             padding: 0;
             margin: 10px 0;
         }
         
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            appearance: none;
-            width: 20px;
-            height: 20px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%; 
-            background: var(--primary-color);
+            background: white;
+            border: 2px solid var(--primary);
             cursor: pointer;
             transition: all 0.15s ease-in-out;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
         }
         
         input[type="range"]::-webkit-slider-thumb:hover {
-            background: var(--secondary-color);
-            transform: scale(1.2);
+            background: var(--primary);
+            transform: scale(1.1);
         }
         
         input[type="range"]::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
-            border: 0;
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--primary);
             border-radius: 50%;
-            background: var(--primary-color);
+            background: white;
             cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
         }
         
         .range-marks {
             display: flex;
             justify-content: space-between;
-            padding: 0 5px;
             font-size: 0.8rem;
-            color: #777;
+            color: var(--gray-600);
+            margin-top: 0.3rem;
         }
         
+        /* Button styling */
         button {
-            background-color: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: var(--radius);
             padding: 1rem 2rem;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 12px rgba(7, 90, 170, 0.25);
         }
         
         button:hover {
-            background-color: var(--secondary-color);
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(7, 90, 170, 0.3);
         }
         
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 8px rgba(7, 90, 170, 0.2);
+        }
+        
+        /* Results section */
         .results {
-            margin-top: 2rem;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            padding: 2rem;
-            display: none; /* Initially hidden */
+            margin-top: 3rem;
+            display: none;
         }
         
+        .results h2 {
+            color: var(--gray-900);
+            margin-bottom: 1.5rem;
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .results h2 i {
+            color: var(--primary);
+        }
+        
+        /* Flight card styling */
         .flight-card {
-            border: 1px solid #eee;
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1rem;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 1.2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: var(--transition);
+            background-color: white;
+            animation: fadeIn 0.3s ease-out;
+            animation-fill-mode: both;
+        }
+        
+        .flight-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.05);
+            border-color: var(--gray-300);
         }
         
         .flight-info {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.6rem;
         }
         
         .flight-time {
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             font-weight: 700;
+            color: var(--gray-900);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .flight-time::after {
+            content: "";
+            display: block;
+            width: 8px;
+            height: 8px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            margin: 0 8px;
+        }
+        
+        .flight-route, .flight-duration {
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
         }
         
         .flight-route {
-            color: #777;
+            color: var(--gray-600);
+        }
+        
+        .flight-route i {
+            color: var(--primary);
+        }
+        
+        .flight-duration {
+            color: var(--gray-700);
+            font-weight: 500;
+        }
+        
+        .flight-duration i {
+            color: var(--gray-600);
         }
         
         .flight-price {
-            font-size: 1.2rem;
+            font-size: 1.5rem;
             font-weight: 700;
-            color: var(--accent-color);
+            color: var(--secondary);
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
         }
         
+        .flight-price::before {
+            content: "Price";
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: var(--gray-600);
+            margin-bottom: -0.3rem;
+        }
+        
+        .book-now {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: calc(var(--radius) - 2px);
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 0.5rem;
+            display: inline-block;
+            box-shadow: 0 2px 6px rgba(215, 31, 38, 0.2);
+        }
+        
+        .book-now:hover {
+            background-color: #b91a20; /* Darker red */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(215, 31, 38, 0.3);
+        }
+        
+        /* Status messages */
+        .no-flights {
+            text-align: center;
+            padding: 2rem;
+            color: var(--gray-600);
+        }
+        
+        .no-flights i {
+            font-size: 3rem;
+            color: var(--gray-400);
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        /* Loading animation */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+        
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(7, 90, 170, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        /* Footer */
         footer {
-            background-color: var(--dark-color);
+            background-color: var(--primary-dark);
             color: white;
             text-align: center;
-            padding: 1.5rem 0;
-            margin-top: 3rem;
+            padding: 2rem 0;
+            margin-top: auto;
         }
         
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-links a {
+            color: var(--gray-300);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .social-links a {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .social-links a:hover {
+            background-color: var(--accent);
+            color: var(--primary-dark);
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            color: var(--gray-400);
+            font-size: 0.85rem;
+        }
+        
+        /* Animations and accessibility */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        button:focus, input:focus, a:focus {
+            outline: 3px solid rgba(7, 90, 170, 0.5);
+            outline-offset: 2px;
+        }
+        
+        /* Animation delays for flight cards */
+        .flight-card:nth-child(2) { animation-delay: 0.1s; }
+        .flight-card:nth-child(3) { animation-delay: 0.2s; }
+        .flight-card:nth-child(4) { animation-delay: 0.3s; }
+        .flight-card:nth-child(5) { animation-delay: 0.4s; }
+        
+        /* Responsive layout */
         @media (min-width: 768px) {
             .search-form {
                 flex-direction: row;
@@ -211,8 +512,29 @@
                 min-width: 200px;
             }
             
+            .search-btn-container {
+                display: flex;
+                align-items: flex-end;
+                padding-bottom: 0.6rem;
+            }
+            
             button {
-                align-self: flex-end;
+                margin-top: 0;
+                white-space: nowrap;
+            }
+            
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            .flight-card {
+                padding: 1.5rem 2rem;
+            }
+        }
+        
+        @media (min-width: 992px) {
+            .card {
+                padding: 3rem;
             }
         }
     </style>
@@ -220,26 +542,33 @@
 <body>
     <header>
         <div class="container">
-            <div class="logo">Next<span>Flight</span>To</div>
+            <div class="logo-container">
+                <div class="logo-icon"><i class="fas fa-plane-departure"></i></div>
+                <div class="logo">Next<span>Flight</span>To</div>
+            </div>
         </div>
     </header>
     
     <main class="container">
-        <section class="flight-search">
-            <h2>Find Your Next Flight</h2>
+        <section class="hero">
+            <h1>Find Your Next Flight</h1>
+            <p>Quickly discover upcoming flights between any two airports within your preferred time window.</p>
+        </section>
+        
+        <section class="card flight-search">
             <form id="flightSearchForm" class="search-form">
                 <div class="form-group">
-                    <label for="currentLocation">Current Location</label>
-                    <input type="text" id="currentLocation" name="currentLocation" placeholder="City or Airport Code" required>
+                    <label for="currentLocation"><i class="fas fa-map-marker-alt"></i> Current Location</label>
+                    <input type="text" id="currentLocation" name="currentLocation" placeholder="City or Airport Code" required autocomplete="off">
                 </div>
                 
                 <div class="form-group">
-                    <label for="destination">Destination</label>
-                    <input type="text" id="destination" name="destination" placeholder="City or Airport Code" required>
+                    <label for="destination"><i class="fas fa-plane-arrival"></i> Destination</label>
+                    <input type="text" id="destination" name="destination" placeholder="City or Airport Code" required autocomplete="off">
                 </div>
                 
                 <div class="form-group">
-                    <label for="timeRange">Departure Within <span id="timeRangeValue">2</span> Hours</label>
+                    <label for="timeRange"><i class="far fa-clock"></i> Departure Within <span id="timeRangeValue">2</span> Hours</label>
                     <input type="range" id="timeRange" name="timeRange" min="0.5" max="4" step="0.5" value="2">
                     <div class="range-marks">
                         <span>30min</span>
@@ -247,118 +576,40 @@
                     </div>
                 </div>
                 
-                <button type="submit">Search Flights</button>
+                <div class="search-btn-container">
+                    <button type="submit"><i class="fas fa-search"></i> Search Flights</button>
+                </div>
             </form>
         </section>
         
-        <section id="results" class="results">
-            <h2>Available Flights</h2>
-            <div id="flightResults">
-                <!-- Flight results will be populated here -->
-            </div>
+        <section id="results" class="card results">
+            <h2><i class="fas fa-list"></i> Available Flights</h2>
+            <div id="flightResults"></div>
         </section>
     </main>
     
     <footer>
         <div class="container">
-            <p>&copy; 2025 NextFlightTo.com | All Rights Reserved</p>
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="#">About</a>
+                    <a href="#">Help</a>
+                    <a href="#">Terms</a>
+                    <a href="#">Privacy</a>
+                </div>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+                <div class="copyright">
+                    <p>&copy; 2025 NextFlightTo.com | All Rights Reserved</p>
+                </div>
+            </div>
         </div>
     </footer>
     
-    <script>
-        // API URL for flight search
-        const API_URL = 'https://nextflightto-api-production.up.railway.app/api/flights';
-        
-        // Update the displayed value when the range slider changes
-        document.getElementById('timeRange').addEventListener('input', function() {
-            document.getElementById('timeRangeValue').textContent = this.value;
-        });
-        
-        // Function to handle form submission
-        document.getElementById('flightSearchForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const currentLocation = document.getElementById('currentLocation').value.toUpperCase();
-            const destination = document.getElementById('destination').value.toUpperCase();
-            const departureWithinHours = document.getElementById('timeRange').value;
-            
-            // Call the API to search for flights
-            searchFlights(currentLocation, destination, departureWithinHours);
-        });
-        
-        // Mock function to simulate flight search
-        function searchFlights(from, to, date) {
-            // Show results section
-            document.getElementById('results').style.display = 'block';
-            
-            // Clear previous results
-            const resultsContainer = document.getElementById('flightResults');
-            resultsContainer.innerHTML = '';
-            
-            // Check if we have any flight data (in a real app, this would come from an API)
-            const mockFlights = generateMockFlights(from, to, date, 5);
-            
-            if (mockFlights.length === 0) {
-                resultsContainer.innerHTML = '<p>No flights found for the selected route and date.</p>';
-                return;
-            }
-            
-            // Display each flight
-            mockFlights.forEach(flight => {
-                const flightCard = document.createElement('div');
-                flightCard.className = 'flight-card';
-                
-                flightCard.innerHTML = `
-                    <div class="flight-info">
-                        <div class="flight-time">${flight.departureTime} - ${flight.arrivalTime}</div>
-                        <div class="flight-route">${flight.airline} · ${flight.flightNumber}</div>
-                        <div class="flight-duration">${flight.duration}</div>
-                    </div>
-                    <div class="flight-price">$${flight.price}</div>
-                `;
-                
-                resultsContainer.appendChild(flightCard);
-            });
-        }
-        
-
-
-        // Function to check for URL parameters (for future IATA code feature)
-        function checkUrlForDestination() {
-            const path = window.location.pathname;
-            if (path.length > 1) {  // If there's something after the domain
-                const iataCode = path.substring(1).toUpperCase(); // Remove the leading slash and convert to uppercase
-                if (iataCode.length === 3) {  // IATA codes are 3 letters
-                    document.getElementById('destination').value = iataCode;
-                }
-            }
-        }
-
-        // Function to get user's location (for future GPS feature)
-        function getUserLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(position => {
-                    // In a real implementation, you would use reverse geocoding to get the city name
-                    // For now, we'll just log the coordinates
-                    console.log(`Latitude: ${position.coords.latitude}, Longitude: ${position.coords.longitude}`);
-                    
-                    // You would then update the current location field
-                    // document.getElementById('currentLocation').value = 'User\'s City';
-                });
-            }
-        }
-
-        // Run on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize time range display
-            document.getElementById('timeRangeValue').textContent = document.getElementById('timeRange').value;
-            
-            // Check for IATA code in URL (future feature)
-            checkUrlForDestination();
-            
-            // For future GPS location feature (commented out for now)
-            // getUserLocation();
-        });
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.js"></script>
+    <script src="nextflightto-minified.js"></script>
 </body>
 </html>
